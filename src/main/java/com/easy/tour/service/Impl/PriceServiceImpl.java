@@ -3,6 +3,7 @@ package com.easy.tour.service.Impl;
 import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.Price.PriceDetail;
+import com.easy.tour.mapper.PriceDetailMapper;
 import com.easy.tour.mapper.PriceMapper;
 import com.easy.tour.repository.PriceRepository;
 import com.easy.tour.service.PriceService;
@@ -22,7 +23,10 @@ public class PriceServiceImpl implements PriceService {
     PriceRepository repository;
 
     @Autowired
-    PriceMapper mapper;
+    PriceMapper priceMapper;
+
+    @Autowired
+    PriceDetailMapper priceDetailMapper;
 
     @Override
     public PriceDTO create(PriceDTO priceDTO) {
@@ -33,29 +37,16 @@ public class PriceServiceImpl implements PriceService {
                 return null;
             }
 
-            Price price = mapper.convertDTOToEntity(priceDTO);
+            Price price = priceMapper.convertDTOToEntity(priceDTO);
 
             // Create priceDetail then set property
-            PriceDetail priceDetail = new PriceDetail();
-            priceDetail.setCoach(priceDTO.getCoach());
-            priceDetail.setMainGuider(priceDTO.getMainGuider());
-            priceDetail.setLocalGuider(priceDTO.getLocalGuider());
-            priceDetail.setAirTicket(priceDTO.getAirTicket());
-            priceDetail.setFood(priceDTO.getFood());
-            priceDetail.setAttraction(priceDTO.getAttraction());
-            priceDetail.setHotel(priceDTO.getHotel());
-            priceDetail.setInsurance(priceDTO.getInsurance());
-            priceDetail.setTax(priceDTO.getTax());
-            priceDetail.setOtherPrice(priceDTO.getOtherPrice());
-            priceDetail.setVisaFee(priceDTO.getVisaFee());
-            priceDetail.setAdult(priceDTO.getAdult());
-            priceDetail.setChildren(priceDTO.getChildren());
+            PriceDetail priceDetail = priceDetailMapper.convertDTOToEntity(priceDTO);
 
             //Connect Price with PriceDetail
             priceDetail.setPrice(price);
             price.setPriceDetail(priceDetail);
 
-            return mapper.convertEntityToDTO(repository.save(price));
+            return priceMapper.convertEntityToDTO(repository.save(price));
         } catch (Exception e) {
           log.error("Error when creating price: " + e);
             return null;
@@ -69,24 +60,8 @@ public class PriceServiceImpl implements PriceService {
 
             // Get priceDetail into Price
             PriceDetail priceDetail = price.getPriceDetail();
-            priceDetail.setCoach(priceDTO.getCoach());
-            priceDetail.setMainGuider(priceDTO.getMainGuider());
-            priceDetail.setLocalGuider(priceDTO.getLocalGuider());
-            priceDetail.setAirTicket(priceDTO.getAirTicket());
-            priceDetail.setFood(priceDTO.getFood());
-            priceDetail.setAttraction(priceDTO.getAttraction());
-            priceDetail.setHotel(priceDTO.getHotel());
-            priceDetail.setInsurance(priceDTO.getInsurance());
-            priceDetail.setTax(priceDTO.getTax());
-            priceDetail.setOtherPrice(priceDTO.getOtherPrice());
-            priceDetail.setVisaFee(priceDTO.getVisaFee());
-            priceDetail.setAdult(priceDTO.getAdult());
-            priceDetail.setChildren(priceDTO.getChildren());
-
-            price.setTourCode(priceDTO.getTourCode());
-
+            priceDetailMapper.mapDTOToEntity(priceDTO, priceDetail);
             repository.save(price);
-
             return true;
         } catch (Exception e) {
             log.error("Error when update price: " + e);
@@ -98,7 +73,7 @@ public class PriceServiceImpl implements PriceService {
     public List<PriceDTO> findAll() {
         List<Price> priceList = repository.findAll();
         return priceList == null ? new ArrayList<>()
-                : priceList.stream().map(entity -> mapper.convertEntityToDTO(entity))
+                : priceList.stream().map(entity -> priceMapper.convertEntityToDTO(entity))
                         .collect(Collectors.toList());
     }
 
@@ -110,5 +85,25 @@ public class PriceServiceImpl implements PriceService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PriceDTO findByTourCode(String tourCode) {
+        Price price = repository.findByTourCode(tourCode);
+
+        if (price != null) {
+            // Get Price Detail
+            PriceDetail priceDetail = price.getPriceDetail();
+
+            // Mapping Price
+            PriceDTO priceDto = priceMapper.convertEntityToDTO(price);
+
+            // Mapping priceDetail
+            priceDetailMapper.mapEntityToDTO(priceDetail, priceDto);
+
+            log.info("price: {}" + priceDto);
+            return priceDto;
+        }
+        return null;
     }
 }

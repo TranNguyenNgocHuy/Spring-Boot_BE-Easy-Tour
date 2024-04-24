@@ -100,4 +100,16 @@ public abstract class AbstractMapper<T, E> {
         return oldEntity;
     };
     //end
+
+    /**
+     * Update dto against entity.
+     * @param t Entity
+     * @param e objectDto
+     * @return objectDto
+     */
+    public E mapEntityToDTO(T t, E e) {
+        mapper.map(t, e);
+        return e;
+    };
+    //end
 }

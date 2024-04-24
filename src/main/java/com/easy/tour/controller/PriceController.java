@@ -2,6 +2,7 @@ package com.easy.tour.controller;
 
 import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.PriceDTO;
+import com.easy.tour.entity.Price.Price;
 import com.easy.tour.response.PriceResponseDTO;
 import com.easy.tour.service.PriceService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,27 @@ public class PriceController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.setMessage("Error when get all Price list , Please try again");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = ApiPath.PRICE_GET_BY_TOUR_CODE)
+    public ResponseEntity<?> getByTourCode(@PathVariable("tourCode") String tourCode) {
+        PriceResponseDTO response = new PriceResponseDTO();
+        try {
+            PriceDTO priceDto = service.findByTourCode(tourCode);
+            if (priceDto != null) {
+                response.setMessage("Successfully to get Price by tour code: " + tourCode);
+                response.setErrorCode(200);
+                response.setData(priceDto);
+                return  new ResponseEntity<>( response, HttpStatus.OK);
+            } else {
+                response.setMessage("Price with tour code " + tourCode + " does not exist!");
+                response.setErrorCode(404);
+                return  new ResponseEntity<>( response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response.setMessage("Error when get price with by code: " + tourCode);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -83,6 +105,8 @@ public class PriceController {
     @DeleteMapping(value = ApiPath.PRICE_DELETE)
     ResponseEntity<?> deletePrice(@PathVariable("tourCode") String tourCode) {
         PriceResponseDTO response = new PriceResponseDTO();
+
+        log.info("delete price: {}", tourCode);
         try{
             boolean deleteResult = service.deletePriceByTourCode(tourCode);
             if(deleteResult) {
