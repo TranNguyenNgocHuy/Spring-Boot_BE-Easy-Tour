@@ -21,8 +21,9 @@ public interface ApiPath {
     //Price
 
     String PRICE_GET_All = API + "/price/get-all";
+    String PRICE_GET_BY_TOUR_CODE = API + "/price/{tourCode}";
     String PRICE_CREATE = API + "/price/create-price";
-    String PRICE_UPDATE = API + "/price/{tourCode}";
-    String PRICE_DELETE = API + "/price/{tourCode}";
+    String PRICE_UPDATE = API + "/price/update/{tourCode}";
+    String PRICE_DELETE = API + "/price/delete/{tourCode}";
     // end
 }

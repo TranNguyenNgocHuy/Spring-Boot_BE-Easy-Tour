@@ -6,4 +6,7 @@ public interface PriceService extends BaseService<PriceDTO> {
     boolean updatePriceByTourCode(PriceDTO PriceDTO, String tourCode);
 
     boolean deletePriceByTourCode(String tourCode);
+
+    PriceDTO findByTourCode(String tourCode);
+
 }

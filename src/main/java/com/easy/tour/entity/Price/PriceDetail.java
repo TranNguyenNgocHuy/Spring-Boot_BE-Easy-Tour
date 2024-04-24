@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class PriceDetail extends BaseEntity {
 
     @Id
+    @Column(name = "Price_Detail_Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
