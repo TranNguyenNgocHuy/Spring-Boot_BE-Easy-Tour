@@ -34,7 +34,13 @@ public class User extends BaseEntity
     @Column(name = "First_Name")
     private String firstName;
 
-    @Column(name = "Email", unique = true)
+    @Column(name = "Gender")
+    private Boolean gender;
+
+    @Column(name = "Phone_Number")
+    private Boolean phoneNumber;
+
+    @Column(name = "Email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "Password")

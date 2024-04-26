@@ -15,3 +15,16 @@ spring:
   devtools:
     restart:
       enabled: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tran.huy211014@gmail.com
+    password: banhmingot2110
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+#  kzjc ypor dlmd tjgh
+#khai.nguyenanh03@gmail.com

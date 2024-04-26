@@ -7,6 +7,8 @@ import com.easy.tour.entity.User.User;
 import com.easy.tour.repository.RoleRepository;
 import com.easy.tour.repository.UserRepository;
 import com.easy.tour.service.UserService;
+import com.easy.tour.utils.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,4 +48,17 @@ public class Application {
 //        };
 //        }
 
+//    @Autowired
+//    EmailService service;
+//
+//    @Bean
+//    public CommandLineRunner sendEmail() {
+//        return args -> {
+//            String to = "tran.huy211014@gmail.com";
+//            String subject = "Email send by Java";
+//            String body = "hello Phú";
+//
+//            service.sendEmail(to, subject, body);
+//        };
+//    }
 }
