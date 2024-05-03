@@ -3,6 +3,7 @@ package com.easy.tour.controller;
 import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.UserDTO;
 import com.easy.tour.response.UserResponseDTO;
+import com.easy.tour.service.Impl.UserServiceImpl;
 import com.easy.tour.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,13 @@ import java.util.List;
 @Slf4j
 public class UserController {
     @Autowired
-    UserService service;
+    UserServiceImpl service;
 
     @GetMapping(value = ApiPath.USER_GET_ALL)
-//    @RequestMapping(value = ApiPath.USER_GET_ALL,
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
     public ResponseEntity<?> getAllUsers() {
         UserResponseDTO response = new UserResponseDTO();
         try {
-            List<UserDTO> list = service.findAll();
+            List<UserDTO> list = service.getAll(new UserDTO());
             response.setList(list);
             response.setMessage("Success get all users");
             response.setErrorCode(200);
@@ -64,7 +61,7 @@ public class UserController {
     public  ResponseEntity<UserResponseDTO> register(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
         try {
-            UserDTO result = service.create(userDTO);
+            UserDTO result = service.register(userDTO);
             if (result != null) {
                 response.setMessage("Register Successful ");
                 response.setErrorCode(200);

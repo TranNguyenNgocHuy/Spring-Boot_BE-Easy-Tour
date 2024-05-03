@@ -7,6 +7,7 @@ import com.easy.tour.mapper.PriceDetailMapper;
 import com.easy.tour.mapper.PriceMapper;
 import com.easy.tour.repository.PriceRepository;
 import com.easy.tour.service.PriceService;
+import com.easy.tour.utils.AspectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class PriceServiceImpl implements PriceService {
+public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
+        implements PriceService {
     @Autowired
     PriceRepository repository;
 
@@ -28,8 +30,12 @@ public class PriceServiceImpl implements PriceService {
     @Autowired
     PriceDetailMapper priceDetailMapper;
 
+    public PriceServiceImpl(AspectService aspect) {
+        super(aspect);
+    }
+
     @Override
-    public PriceDTO create(PriceDTO priceDTO) {
+    public PriceDTO createPrice(PriceDTO priceDTO) {
         try {
             // Check Price exist by Tour Code
             if (repository.existsByTourCode(priceDTO.getTourCode())) {
@@ -60,6 +66,7 @@ public class PriceServiceImpl implements PriceService {
 
             // Get priceDetail into Price
             PriceDetail priceDetail = price.getPriceDetail();
+
             priceDetailMapper.mapDTOToEntity(priceDTO, priceDetail);
             repository.save(price);
             return true;
@@ -69,13 +76,13 @@ public class PriceServiceImpl implements PriceService {
         }
     }
 
-    @Override
-    public List<PriceDTO> findAll() {
-        List<Price> priceList = repository.findAll();
-        return priceList == null ? new ArrayList<>()
-                : priceList.stream().map(entity -> priceMapper.convertEntityToDTO(entity))
-                        .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<PriceDTO> findAll() {
+//        List<Price> priceList = repository.findAll();
+//        return priceList == null ? new ArrayList<>()
+//                : priceList.stream().map(entity -> priceMapper.convertEntityToDTO(entity))
+//                        .collect(Collectors.toList());
+//    }
 
     @Override
     public boolean deletePriceByTourCode(String tourCode) {
@@ -94,13 +101,10 @@ public class PriceServiceImpl implements PriceService {
         if (price != null) {
             // Get Price Detail
             PriceDetail priceDetail = price.getPriceDetail();
-
             // Mapping Price
             PriceDTO priceDto = priceMapper.convertEntityToDTO(price);
-
             // Mapping priceDetail
             priceDetailMapper.mapEntityToDTO(priceDetail, priceDto);
-
             log.info("price: {}" + priceDto);
             return priceDto;
         }

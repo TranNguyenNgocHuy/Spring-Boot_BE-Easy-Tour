@@ -1,5 +1,6 @@
 package com.easy.tour.configure;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -14,32 +15,13 @@ import java.util.Collections;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-//@EnableSwagger2
 public class SwaggerConfig {
-//    private static final String REGEX_API = "/api/v1.*";
-//
-//    @Bean
-//    public Docket api() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .apiInfo(apiInfo())
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(regex(REGEX_API))
-//                .build();
-//    }
-//
-//    /**
-//     * @return
-//     */
-//    private ApiInfo apiInfo() {
-//        return new ApiInfo(
-//                "Spring Boot REST API",
-//                "Spring Boot REST API for Easy Tour",
-//                "1.0",
-//                "Terms of service",
-//                new Contact("easyTour", "www.example.com", "easyTour@gmail.com"),
-//                "MIT-License", "https://en.wikipedia.org/wiki/MIT_License", Collections.emptyList());
-//    }
+    /**
+     * Swagger URL: http://localhost:8080/swagger-ui/index.html#/
+     * */
 
-//    end http://localhost:9090/swagger-ui.html
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 }

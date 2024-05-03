@@ -148,5 +148,4 @@ public class JwtService {
         {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "
         return null;
     }
-
 }

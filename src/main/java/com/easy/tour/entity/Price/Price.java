@@ -6,10 +6,12 @@ import com.easy.tour.entity.BaseEntity;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

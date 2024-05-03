@@ -9,10 +9,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-
+@Component
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +21,7 @@ import java.util.*;
 @Table(name = "user")
 public class User extends BaseEntity
         implements UserDetails {
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "User_Id")
@@ -46,7 +48,7 @@ public class User extends BaseEntity
     @Column(name = "Password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER  , cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     private List <Role> roles = new ArrayList<>();
 
     public User() {
@@ -112,7 +114,6 @@ public class User extends BaseEntity
      * có thể đăng nhập và sử dụng hệ thống hay ko
      * Ex: Kiểm tra xem người dùng đã xác nhận email
      * hay chưa mà set thành True or false
-     *
      */
     @Override
     public boolean isEnabled() {
