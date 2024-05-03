@@ -4,6 +4,7 @@ import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.response.PriceResponseDTO;
+import com.easy.tour.service.Impl.PriceServiceImpl;
 import com.easy.tour.service.PriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ import java.util.List;
 public class PriceController {
 
     @Autowired
-    PriceService service;
+    PriceServiceImpl service;
 
     @GetMapping(value = ApiPath.PRICE_GET_All)
     public ResponseEntity<?> getAllPriceList() {
         PriceResponseDTO response = new PriceResponseDTO();
         try {
-            List<PriceDTO> priceDTOList = service.findAll();
+            List<PriceDTO> priceDTOList = service.getAll(new PriceDTO());
             response.setMessage("Successfully retrieved All Price");
             response.setErrorCode(200);
             response.setList(priceDTOList);
@@ -60,13 +61,12 @@ public class PriceController {
     ResponseEntity<?> createPrice(@RequestBody PriceDTO priceDTO) {
         PriceResponseDTO response = new PriceResponseDTO();
         try {
-            PriceDTO createPrice = service.create(priceDTO);
+            PriceDTO createPrice = service.createPrice(priceDTO);
             if(createPrice != null) {
                 response.setMessage("Success created Price with tour code: " + priceDTO.getTourCode());
                 response.setErrorCode(200);
                 response.setData(createPrice);
                 return new ResponseEntity(response, HttpStatus.OK);
-
             } else {
                 response.setMessage("Tour Code " + priceDTO.getTourCode() + " already exist");
                 response.setErrorCode(400);
@@ -105,8 +105,6 @@ public class PriceController {
     @DeleteMapping(value = ApiPath.PRICE_DELETE)
     ResponseEntity<?> deletePrice(@PathVariable("tourCode") String tourCode) {
         PriceResponseDTO response = new PriceResponseDTO();
-
-        log.info("delete price: {}", tourCode);
         try{
             boolean deleteResult = service.deletePriceByTourCode(tourCode);
             if(deleteResult) {
@@ -119,7 +117,6 @@ public class PriceController {
                 return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
             }
         } catch (Exception e) {
-            log.trace(String.valueOf(e.getMessage()));
             response.setMessage("Error when deleted Price, Please try again");
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

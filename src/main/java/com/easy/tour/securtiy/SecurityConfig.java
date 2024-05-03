@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -35,7 +35,7 @@ public class SecurityConfig {
                         req -> req.requestMatchers("/api/v1/login", "/api/v1/user/register")
                                 .permitAll()
                                 .anyRequest()
-                                .permitAll() // open Security
+                                .permitAll()
 //  Open Security                .authenticated()
                 )
 //  Open Security              .userDetailsService(userDetailsServiceImpl)

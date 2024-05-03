@@ -8,6 +8,7 @@ import com.easy.tour.repository.RoleRepository;
 import com.easy.tour.repository.UserRepository;
 import com.easy.tour.securtiy.jwt.JwtService;
 import com.easy.tour.service.UserService;
+import com.easy.tour.utils.AspectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
+        implements UserService {
     @Autowired
     UserRepository userRepository;
 
@@ -40,15 +42,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     JwtService jwtService;
 
+    public UserServiceImpl(AspectService aspect) {
+        super(aspect);
+    }
+
 
     // Tạo User
     @Override
-    public UserDTO create(UserDTO userDto) {
+    public UserDTO register(UserDTO userDto) {
         UserDTO result = new UserDTO();
 
         try {
             if (userRepository.existsByEmail(userDto.getEmail())) {
-                log.trace("Email already exist: {}", userDto.getEmail());
+                log.info("Email already exist: {}", userDto.getEmail());
                 return null;
             }
 
@@ -74,40 +80,18 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    // Xác thực khi User login
+
     public String login(UserDTO userDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userDTO.getEmail(),
-                        userDTO.getPassword()
-                )
+                        userDTO.getPassword())
         );
-
         User user = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();
         String token = jwtService.generateToken(user);
-
         return token;
     }
 
-    @Override
-    public boolean update(UserDTO dto) {
-        try {
-            User user = mapper.convertDTOToEntity(dto);
-            mapper.convertEntityToDTO(userRepository.saveAndFlush(user));
-            return true;
-        } catch (Exception ex) {
-            log.error("Error when updating:", ex);
-            return false;
-        }
-    }
-
-    @Override
-    public List<UserDTO> findAll() {
-        List<User> users = userRepository.findAll();
-        return users == null ? new ArrayList<>()
-                : users.stream().map(entity -> mapper.convertEntityToDTO(entity))
-                                .collect(Collectors.toList());
-    }
 
 //    @Override
 //    public boolean delete(String uuid) {

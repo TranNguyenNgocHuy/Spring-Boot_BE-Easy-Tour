@@ -2,12 +2,10 @@ package com.easy.tour.service;
 
 import com.easy.tour.dto.UserDTO;
 
-public interface UserService extends BaseService<UserDTO> {
+import java.util.List;
+
+public interface UserService  {
     public String login(UserDTO userDTO);
 
-    public UserDTO create(UserDTO userDto);
-
-    boolean update(UserDTO dto);
-
-
+    public UserDTO register(UserDTO userDto);
 }

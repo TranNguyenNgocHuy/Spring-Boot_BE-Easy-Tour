@@ -18,6 +18,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     JwtService jwtService;
-
-
 }
