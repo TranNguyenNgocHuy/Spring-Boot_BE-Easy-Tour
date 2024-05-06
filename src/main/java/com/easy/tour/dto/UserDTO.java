@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Set;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode
 @Data
 public class UserDTO extends BaseObject {
+
+    private String uuid;
 
     private String lastName;
 
@@ -23,5 +26,5 @@ public class UserDTO extends BaseObject {
 
     private Integer phoneNumber;
 
-    private int roleName; // (1 admin, 2 user, 3 manager)
+    private Set<String> roles;
 }

@@ -26,5 +26,7 @@ spring:
           auth: true
           starttls:
             enable: true
-#  kzjc ypor dlmd tjgh
-#khai.nguyenanh03@gmail.com
+  data:
+    jpa:
+      repositories:
+        base-package: com.easy.tour.repository

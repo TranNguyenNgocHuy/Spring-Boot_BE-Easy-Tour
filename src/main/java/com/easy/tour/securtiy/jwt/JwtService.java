@@ -28,25 +28,17 @@ public class JwtService {
     private final String SECRET_KEY = "ae74d2bb9224e6a3ecd56b26b76d05a20361d21289e9a5b0553c0c7cc2e0272c";
     private final Long JWT_EXPIRATION = 86400000L; // 24h * 60m * 60s * 1000
 
+    // Method extract Token form Http Servlet
+    public String getToken (HttpServletRequest request) {
 
-    // Extract User Name from token
-    public String extractUserName(String token) {
-        return extractClaim(token, Claims::getSubject);
+        final String bearerToken = request.getHeader("Authorization");
+
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
+        {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "
+        return null;
     }
 
-
-    /**
-     * @Title: Extract all Claims from token
-     *
-     * Method basic:
-     * public Claims extractAllClaims(String token) {
-     *     return Jwts.parser()
-     *     .setSigningKey(SECRET_KEY)
-     *     .parseClaimsJws(token)
-     *     .getBody();
-     * }
-     *
-     */
+    // Extract all Claims from token
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
@@ -62,6 +54,10 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // Extract User Name from token
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 
     //Extract the Object information
     // from Token and function Claims extractAllClaims
@@ -82,13 +78,11 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    // Kiểm tra Username(dự án lấy email làm username)
-    // trong Token có khớp ko và token còn hạn ko
+    // Kiểm tra Username trong Token có khớp ko và token còn hạn ko(dự án lấy email làm username)
     public boolean isValid(String token, UserDetails user) {
         String email = extractUserName(token);
         return email.equals(user.getUsername()) && !isTokenExpired(token);
     }
-
 
    // Create Token
     public String generateToken(User user) {
@@ -137,15 +131,4 @@ public class JwtService {
         }
         return false;
 }
-
-
-    // Method extract Token form Http Servlet
-    public String getToken (HttpServletRequest request) {
-
-        final String bearerToken = request.getHeader("Authorization");
-
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-        {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "
-        return null;
-    }
 }

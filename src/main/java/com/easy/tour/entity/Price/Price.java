@@ -29,18 +29,6 @@ public class Price extends BaseEntity {
     @Column(name = "Tour_Code")
     private String tourCode;
 
-    @Column(name = "Creator")
-    private String creator;
-
-    @Column(name = "Create_Date")
-    private Date createDate;
-
-    @Column(name = "Approved_By")
-    private String approvedBy;
-
-    @Column(name = "Approval_Date")
-    private Date approvalDate;
-
     @Column(name = "Approval_Status")
     @Enumerated(EnumType.STRING)
     private ApprovalStatus approvalStatus;
@@ -50,5 +38,4 @@ public class Price extends BaseEntity {
 
     @OneToOne(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private PriceApproval priceApproval;
-
 }

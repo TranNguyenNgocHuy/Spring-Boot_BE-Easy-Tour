@@ -26,27 +26,41 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-//        @Bean
-//    CommandLineRunner createRole(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-//        return args -> {
-//            roleRepository.save(new Role(RoleName.ADMIN));
-//            roleRepository.save(new Role(RoleName.MANAGER));
-//            roleRepository.save(new Role(RoleName.USER));
-//
-//            Role role = roleRepository.findByRoleName(RoleName.ADMIN);
-//
-//            User adminUser = new User();
-//            adminUser.setUserId(1L);
-//            adminUser.setUuid(UUID.randomUUID().toString());
-//            adminUser.setLastName("Admin");
-//            adminUser.setFirstName("Admin");
-//            adminUser.setEmail("admin@admin.com");
-//            adminUser.setPassword(passwordEncoder.encode("admin"));
-//            adminUser.getRoles().add(role);
-//
-//            userRepository.save(adminUser);
-//        };
-//        }
+    @Bean
+    CommandLineRunner createRole(RoleRepository roleRepository,
+                                 UserRepository userRepository,
+                                 PasswordEncoder passwordEncoder) {
+        return args -> {
+            Role r1 = new Role(RoleName.ADMIN);
+            Role r2 = new Role(RoleName.MANAGER);
+            Role r3 = new Role(RoleName.USER);
+
+            if (!roleRepository.existsByRoleName(RoleName.ADMIN)) {
+                roleRepository.save(new Role(RoleName.ADMIN));
+            }
+
+            if (!roleRepository.existsByRoleName(RoleName.MANAGER)) {
+                roleRepository.save(new Role(RoleName.MANAGER));
+            }
+
+            if (!roleRepository.existsByRoleName(RoleName.USER)) {
+                roleRepository.save(new Role(RoleName.USER));
+            }
+
+            if (!userRepository.existsByEmail("admin@admin.com")) {
+                User adminUser = new User();
+                adminUser.setUserId(1L);
+                adminUser.setUuid(UUID.randomUUID().toString());
+                adminUser.setLastName("Admin");
+                adminUser.setFirstName("Admin");
+                adminUser.setEmail("admin@admin.com");
+                adminUser.setPassword(passwordEncoder.encode("123456"));
+                adminUser.getRoles().add(roleRepository.findByRoleName(RoleName.ADMIN));
+                userRepository.save(adminUser);
+            }
+        };
+    }
+
 
 //    @Autowired
 //    EmailService service;

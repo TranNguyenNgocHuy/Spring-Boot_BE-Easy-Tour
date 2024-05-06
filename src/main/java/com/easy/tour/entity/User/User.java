@@ -1,6 +1,7 @@
 package com.easy.tour.entity.User;
 
 import com.easy.tour.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,20 +46,31 @@ public class User extends BaseEntity
     @Column(name = "Email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "Password")
+    @Column(name = "Password", nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-    private List <Role> roles = new ArrayList<>();
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonManagedReference
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
         this.uuid = UUID.randomUUID().toString();
     }
 
-    public User (String email , String password , List<Role> roles) {
+    public User (String email , String password , HashSet<Role> roles) {
         this.email = email ;
         this.password = password ;
         this.roles = roles ;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        this.roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
+        return authorities;
     }
 
     @Override
@@ -66,19 +78,7 @@ public class User extends BaseEntity
         return this.email;
     }
 
-    /**
-     *This Method will return List role of User
-     * Trả về danh sách các role của người dùng từ entity User
-     * Ví dụ: Lấy tất cả Role của 1 User convert thành
-     * đối tượng SimpleGrantedAuthority, sau đó lưu lại
-     * trong List<GrantedAuthority>
-     */
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        this.roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
-        return authorities;
-    }
+
 
     /**
      * TK còn hạn hay ko

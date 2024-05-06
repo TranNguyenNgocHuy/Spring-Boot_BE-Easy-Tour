@@ -38,6 +38,7 @@ public class UserController {
     @PostMapping(value = ApiPath.USER_LOGIN)
     public ResponseEntity<UserResponseDTO> signIn(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
+        System.out.println(userDTO);
         try {
             String token = service.login(userDTO);
             if (token != null) {
@@ -50,7 +51,7 @@ public class UserController {
             response.setErrorCode(400);
             return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
         } catch (Exception e) {
-            response.setMessage("Error when signIn:" + e);
+            response.setMessage("Error when sign In:" + e);
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
