@@ -2,6 +2,7 @@ package com.easy.tour.service.Impl;
 
 import com.easy.tour.Enum.RoleName;
 import com.easy.tour.dto.UserDTO;
+import com.easy.tour.entity.User.Role;
 import com.easy.tour.entity.User.User;
 import com.easy.tour.mapper.UserMapper;
 import com.easy.tour.repository.RoleRepository;
@@ -50,8 +51,6 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
     // Tạo User
     @Override
     public UserDTO register(UserDTO userDto) {
-        UserDTO result = new UserDTO();
-
         try {
             if (userRepository.existsByEmail(userDto.getEmail())) {
                 log.info("Email already exist: {}", userDto.getEmail());
@@ -65,19 +64,26 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
             // Set Role
-            if (userDto.getRoleName() == 1) {
-                user.getRoles().add(roleRepository.findByRoleName(RoleName.ADMIN));
-            } else if (userDto.getRoleName() == 2) {
-                user.getRoles().add(roleRepository.findByRoleName(RoleName.USER));
-            } else if (userDto.getRoleName() == 3) {
-                user.getRoles().add(roleRepository.findByRoleName(RoleName.MANAGER));
+            for (String roleName : userDto.getRoles()) {
+                if (roleName.equals("ADMIN")) {
+                    Role role = roleRepository.findByRoleName(RoleName.ADMIN);
+                    user.getRoles().add(role);
+                }
+                if (roleName.equals("MANAGER")) {
+                    Role role = roleRepository.findByRoleName(RoleName.MANAGER);
+                    user.getRoles().add(role);
+                }
+                if (roleName.equals("USER")) {
+                    Role role = roleRepository.findByRoleName(RoleName.USER);
+                    user.getRoles().add(role);
+                }
             }
 
-            result = mapper.convertEntityToDTO(userRepository.save(user));
+            return mapper.convertEntityToDTO(userRepository.save(user));
         } catch (Exception ex) {
-            log.error("Error when creating:", ex);
+            ex.printStackTrace();
+            return null;
         }
-        return result;
     }
 
 

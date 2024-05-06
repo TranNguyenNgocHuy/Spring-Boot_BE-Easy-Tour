@@ -2,10 +2,8 @@ package com.easy.tour.controller;
 
 import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.PriceDTO;
-import com.easy.tour.entity.Price.Price;
 import com.easy.tour.response.PriceResponseDTO;
 import com.easy.tour.service.Impl.PriceServiceImpl;
-import com.easy.tour.service.PriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +19,16 @@ public class PriceController {
     @Autowired
     PriceServiceImpl service;
 
+
     @GetMapping(value = ApiPath.PRICE_GET_All)
     public ResponseEntity<?> getAllPriceList() {
         PriceResponseDTO response = new PriceResponseDTO();
         try {
-            List<PriceDTO> priceDTOList = service.getAll(new PriceDTO());
+            List<PriceDTO> priceDTOList = service.findAll();
             response.setMessage("Successfully retrieved All Price");
             response.setErrorCode(200);
             response.setList(priceDTOList);
+            System.out.println(priceDTOList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.setMessage("Error when get all Price list , Please try again");

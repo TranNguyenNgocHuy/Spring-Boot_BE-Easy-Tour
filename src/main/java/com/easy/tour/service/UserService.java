@@ -5,7 +5,7 @@ import com.easy.tour.dto.UserDTO;
 import java.util.List;
 
 public interface UserService  {
-    public String login(UserDTO userDTO);
+    UserDTO register(UserDTO userDto);
 
-    public UserDTO register(UserDTO userDto);
+    String login(UserDTO userDTO);
 }

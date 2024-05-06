@@ -35,23 +35,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
 
-        // lấy Token từ header khi có request đến
+        // Get Token from header
         String token = jwtService.getToken(request);
 
-        // Nếu có token và chữ ký trong Token hợp lệ
+        // Validate Token
         if(token != null && jwtService.validateToken(token)) {
 
-            // Trích xuất User name (dự án lấy email làm username)
+            // Extract userName (Project use UserName = Email)
             String email = jwtService.extractUserName(token);
 
-            // Từ Email lấy User từ DB
+            // Load userName from DB
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-            // Nếu User ko null tức là User đã Successful Authentication
+            // If User not null. It's mean user is Successful Authentication
             if(userDetails != null) {
-
-                // UsernamePasswordAuthenticationToken đc tạo mới
-                // bên dưới đại diện cho user đã đc xác thực
+                // Tạo mới đối tượng UsernamePasswordAuthenticationToken
+                // đại diện cho user đã đc xác thực
                 // nhận 3 đối số:
                 //            1 Username
                 //            2 Password(set = null vì đã xác thực được User r)
@@ -61,8 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.info("authenticated user with email :{}", email);
 
                 // Đặt userAuthentication vào HolderContext
-                // để thông báo User đã xác thực và sẽ bị xóa
-                // khi request kết thúc
+                // để thông báo User đã xác thực
+                // và được xóa đi khi request kết thúc
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

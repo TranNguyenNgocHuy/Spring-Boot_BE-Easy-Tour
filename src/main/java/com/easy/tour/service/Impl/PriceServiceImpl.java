@@ -76,13 +76,19 @@ public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
         }
     }
 
-//    @Override
-//    public List<PriceDTO> findAll() {
-//        List<Price> priceList = repository.findAll();
-//        return priceList == null ? new ArrayList<>()
-//                : priceList.stream().map(entity -> priceMapper.convertEntityToDTO(entity))
-//                        .collect(Collectors.toList());
-//    }
+    @Override
+    public List<PriceDTO> findAll() {
+        List<Price> priceList = repository.findAll();
+        return priceList == null ? new ArrayList<>()
+                : priceList.stream().map(entity -> {
+                    PriceDTO priceDTO = priceMapper.convertEntityToDTO(entity);
+                    priceDTO.setCreator(entity.getCreatedBy());
+                    priceDTO.setCreateDate(entity.getCreatedDate());
+                    priceDTO.setModifiedBy(entity.getModifiedBy());
+                    priceDTO.setModifiedDate(entity.getModifiedDate());
+                    return priceDTO;
+                }).collect(Collectors.toList());
+    }
 
     @Override
     public boolean deletePriceByTourCode(String tourCode) {

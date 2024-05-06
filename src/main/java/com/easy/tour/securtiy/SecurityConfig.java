@@ -35,14 +35,13 @@ public class SecurityConfig {
                         req -> req.requestMatchers("/api/v1/login", "/api/v1/user/register")
                                 .permitAll()
                                 .anyRequest()
-                                .permitAll()
-//  Open Security                .authenticated()
+                .authenticated()
                 )
-//  Open Security              .userDetailsService(userDetailsServiceImpl)
-//  Open Security              .sessionManagement(session -> session
-//  Open Security              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//  Open Security              )
-//  Open Security              .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+              .userDetailsService(userDetailsServiceImpl)
+              .sessionManagement(session -> session
+              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+              )
+              .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

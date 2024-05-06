@@ -12,4 +12,6 @@ public interface PriceService {
     PriceDTO findByTourCode(String tourCode);
 
     PriceDTO createPrice(PriceDTO priceDTO);
+
+    List<PriceDTO> findAll();
 }
