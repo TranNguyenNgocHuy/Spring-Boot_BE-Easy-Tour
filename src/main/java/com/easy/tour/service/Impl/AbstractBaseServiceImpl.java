@@ -1,42 +1,59 @@
 package com.easy.tour.service.Impl;
 
+import com.easy.tour.mapper.AbstractMapper;
 import com.easy.tour.service.BaseService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import com.easy.tour.utils.AspectService;
-
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public abstract class AbstractBaseServiceImpl<T> implements BaseService<T> {
-    private AspectService aspect;
+    @Setter
+    public static Object repository;
+
+    @Setter
+    public AbstractMapper mapper;
+
+    public abstract void setRepository();
+
+    public <T, ID> JpaRepository<T, ID> getRepositry() {
+        return (JpaRepository<T, ID>) this.repository;
+    }
+
 
     @Override
-    public T create(T dto) {
-        Object entity = aspect.getModelMapper().map(dto, aspect.getEntity().getClass());
-        return (T) aspect.getModelMapper().map(aspect.getRepository().save(entity), dto.getClass());
+    public T create(T DTO) {
+        setRepository();
+        Object existingEntity = mapper.convertDTOToEntity(DTO);
+        return (T) mapper.convertEntityToDTO(getRepositry().save(existingEntity));
     }
 
     @Override
-    public T getByID(T dto) {
-        return (T) aspect.getModelMapper().map(aspect.getRepository().findById(aspect.getValueId()), dto.getClass());
+    public <ID> T getByID(ID idDTO) {
+        setRepository();
+        return (T) mapper.convertEntityToDTO(getRepositry().findById(idDTO));
     }
 
     @Override
-    public List<T> getAll(T dto) {
-        List<T> entities = aspect.getRepository().findAll();
-        return (List<T>) entities.stream().map((entity) -> aspect.getModelMapper().map(entity, dto.getClass())).toList();
+    public List<T> getAll() {
+        setRepository();
+        List<T> entities = (List<T>) getRepositry().findAll();
+        return (List<T>) entities.stream().map((entity) -> mapper.convertEntityToDTO(entity)).toList();
     }
 
     @Override
-    public T update(T dto) {
-        Object entity = aspect.getModelMapper().map(dto, aspect.getEntity().getClass());
-        return (T) aspect.getModelMapper().map(aspect.getRepository().save(entity), dto.getClass());
+    public T update(T DTO) {
+        setRepository();
+        Object entity = mapper.convertDTOToEntity(DTO);
+        return (T) mapper.convertEntityToDTO(getRepositry().save(entity));
     }
 
     @Override
-    public void delete(T dto) {
-        aspect.getRepository().deleteById(aspect.getValueId());
+    public <ID> void delete(ID idDTO) {
+        setRepository();
+        getRepositry().deleteById(idDTO);
     }
 }

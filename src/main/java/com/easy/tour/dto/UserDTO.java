@@ -24,7 +24,7 @@ public class UserDTO extends BaseObject {
 
     private Boolean gender;
 
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     private Set<String> roles;
 }

@@ -23,7 +23,7 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         UserResponseDTO response = new UserResponseDTO();
         try {
-            List<UserDTO> list = service.getAll(new UserDTO());
+            List<UserDTO> list = service.getAll();
             response.setList(list);
             response.setMessage("Success get all users");
             response.setErrorCode(200);
@@ -38,41 +38,59 @@ public class UserController {
     @PostMapping(value = ApiPath.USER_LOGIN)
     public ResponseEntity<UserResponseDTO> signIn(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
-        System.out.println(userDTO);
         try {
             String token = service.login(userDTO);
-            if (token != null) {
-                response.setAccessToken(token);
-                response.setMessage("Successful sign in");
-                response.setErrorCode(200);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+            if (token == null) {
+                response.setMessage("UserName or password incorrect!!");
+                response.setErrorCode(403);
+                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
             }
-            response.setMessage("UserName or password incorrect!!");
-            response.setErrorCode(400);
-            return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
-        } catch (Exception e) {
-            response.setMessage("Error when sign In:" + e);
+            response.setAccessToken(token);
+            response.setMessage("Successful sign in");
+            response.setErrorCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception ex) {
+            response.setMessage("Server error when sign In:" + ex);
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @PostMapping(value = ApiPath.USER_CREATE)
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserDTO userDTO) {
+        UserResponseDTO response = new UserResponseDTO();
+        try {
+            UserDTO result = service.createUser(userDTO);
+            if (result == null) {
+                response.setMessage("Email already exist !");
+                response.setErrorCode(401);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            response.setMessage("Register Successful ");
+            response.setErrorCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception ex) {
+            response.setMessage("Server error when create user: " + ex);
+            response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping(value = ApiPath.USER_REGISTER)
-    public  ResponseEntity<UserResponseDTO> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
         try {
             UserDTO result = service.register(userDTO);
-            if (result != null) {
-                response.setMessage("Register Successful ");
-                response.setErrorCode(200);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+            if (result == null) {
+                response.setMessage("Email already exist !");
+                response.setErrorCode(401);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            response.setMessage("Email already exist !");
-            response.setErrorCode(400);
-            return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
+            response.setMessage("Register Successful ");
+            response.setErrorCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            response.setMessage("Error when register:" + e);
+            response.setMessage("Server error register:" + e);
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

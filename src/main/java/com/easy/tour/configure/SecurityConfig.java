@@ -1,5 +1,6 @@
-package com.easy.tour.securtiy;
+package com.easy.tour.configure;
 
+import com.easy.tour.securtiy.UserDetailsServiceImpl;
 import com.easy.tour.securtiy.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,15 +36,26 @@ public class SecurityConfig {
                         req -> req.requestMatchers("/api/v1/login", "/api/v1/user/register")
                                 .permitAll()
                                 .anyRequest()
-                .authenticated()
+                                .permitAll()
+  //              .authenticated()
                 )
-              .userDetailsService(userDetailsServiceImpl)
-              .sessionManagement(session -> session
-              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-              )
-              .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+//             .userDetailsService(userDetailsServiceImpl)
+//             .sessionManagement(session -> session
+//              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//              )
+              .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
+
+    //    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://example.com")); // Các domain được phép truy cập
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Các phương thức được phép
+//        configuration.setAllowedHeaders(Arrays.asList("*")); // Các header được phép
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -3,11 +3,11 @@ package com.easy.tour.service.Impl;
 import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.Price.PriceDetail;
+import com.easy.tour.mapper.AbstractMapper;
 import com.easy.tour.mapper.PriceDetailMapper;
 import com.easy.tour.mapper.PriceMapper;
 import com.easy.tour.repository.PriceRepository;
 import com.easy.tour.service.PriceService;
-import com.easy.tour.utils.AspectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +30,15 @@ public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
     @Autowired
     PriceDetailMapper priceDetailMapper;
 
-    public PriceServiceImpl(AspectService aspect) {
-        super(aspect);
+    public PriceServiceImpl() {
+        super.setMapper(new PriceMapper());
     }
+
+    @Override
+    public void setRepository() {
+        AbstractBaseServiceImpl.setRepository(repository);
+    }
+
 
     @Override
     public PriceDTO createPrice(PriceDTO priceDTO) {

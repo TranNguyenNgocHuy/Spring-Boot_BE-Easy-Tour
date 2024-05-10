@@ -1,5 +1,6 @@
 package com.easy.tour.mapper;
 
+import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -10,11 +11,14 @@ import java.lang.reflect.Type;
  * @param <T>
  * @param <E>
  */
-public abstract class AbstractMapper<T, E> {
+public class AbstractMapper<T, E> {
 
     protected final ModelMapper mapper;
+    @Getter
     private Class<?> tClazz;
+    @Getter
     private Class<?> uClazz;
+
 
     /**
      * Constructor AbstractMapper
