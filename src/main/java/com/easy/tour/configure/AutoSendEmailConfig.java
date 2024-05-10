@@ -1,4 +1,4 @@
-package com.easy.tour.utils;
+package com.easy.tour.configure;
 
 
 import org.springframework.beans.factory.annotation.*;
@@ -7,11 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Properties;
-
 
 @Configuration
-public class EmailConfig {
+public class AutoSendEmailConfig {
     @Value("${spring.mail.host}")
     private String host;
 

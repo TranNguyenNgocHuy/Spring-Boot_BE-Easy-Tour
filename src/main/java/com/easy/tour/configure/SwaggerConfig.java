@@ -19,7 +19,6 @@ public class SwaggerConfig {
     /**
      * Swagger URL: http://localhost:8080/swagger-ui/index.html#/
      * */
-
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();

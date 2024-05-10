@@ -69,7 +69,7 @@ public class PriceController {
                 return new ResponseEntity(response, HttpStatus.OK);
             } else {
                 response.setMessage("Tour Code " + priceDTO.getTourCode() + " already exist");
-                response.setErrorCode(400);
+                response.setErrorCode(401);
                 return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
             }
         } catch (Exception e) {

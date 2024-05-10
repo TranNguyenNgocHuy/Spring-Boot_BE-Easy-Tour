@@ -18,7 +18,6 @@ import java.util.List;
 @Setter
 public class ResponseDTO<T> implements Serializable {
     public String message;
-    @JsonProperty("error_code")
     public Integer errorCode;
     public T data;
     public List<T> list;

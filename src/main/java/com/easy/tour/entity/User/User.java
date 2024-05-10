@@ -41,7 +41,7 @@ public class User extends BaseEntity
     private Boolean gender;
 
     @Column(name = "Phone_Number")
-    private Boolean phoneNumber;
+    private Long phoneNumber;
 
     @Column(name = "Email", unique = true, nullable = false)
     private String email;
