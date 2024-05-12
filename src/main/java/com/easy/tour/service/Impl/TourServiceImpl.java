@@ -2,15 +2,21 @@ package com.easy.tour.service.Impl;
 
 import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.dto.TourDTO;
+import com.easy.tour.dto.TourRequestDTO;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.Tour.Tour;
+import com.easy.tour.entity.Tour.TourRequest;
 import com.easy.tour.mapper.AbstractMapper;
 import com.easy.tour.mapper.TourMapper;
+import com.easy.tour.mapper.TourRequestMapper;
 import com.easy.tour.repository.TourRepository;
+import com.easy.tour.repository.TourRequestRepository;
 import com.easy.tour.service.TourService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -21,6 +27,14 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
 
     @Autowired
     TourMapper tourMapper;
+
+    @Autowired
+    TourRequestRepository tourRequestRepository;
+    @Autowired
+    TourRequestServiceImpl tourRequestService;
+
+    @Autowired
+    TourRequestMapper tourRequestMapper;
 
     public TourServiceImpl() {
         super.setMapper(new TourMapper());
@@ -67,5 +81,17 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
         return false;
     }
 
+    public TourDTO createTour(TourDTO tourDTO) {
+
+        Tour tour = tourMapper.convertDTOToEntity(tourDTO);
+
+        TourRequest tourRequest = tourRequestRepository.findByUuid(UUID.fromString(tourDTO.getTourRequestCode().trim()));
+
+
+        tour.setTourRequest(tourRequest);
+        System.out.println(tour);
+
+        return tourMapper.convertEntityToDTO(tourRepository.save(tour));
+    }
 
 }

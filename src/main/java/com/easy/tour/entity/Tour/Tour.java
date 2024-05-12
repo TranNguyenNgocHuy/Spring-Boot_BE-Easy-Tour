@@ -1,9 +1,6 @@
 package com.easy.tour.entity.Tour;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +25,7 @@ public class Tour {
 
     @Column(name = "Maximum_Size")
     private Integer maximumSize;
+
 // @Column(name = "Creator")
 // private String creator;
 //
@@ -43,4 +41,14 @@ public class Tour {
 // @Column(name = "Approval_Status")
 // @Enumerated(EnumType.STRING)
 // private ApprovalStatus approvalStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "Tour_Request_Id")
+    private TourRequest tourRequest;
+
+    @Column(name = "Img1")
+    private String tourImg1;
+
+    @Column(name = "Img2")
+    private String tourImg2;
 }
