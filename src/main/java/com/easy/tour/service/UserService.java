@@ -9,7 +9,9 @@ public interface UserService  {
 
     UserDTO createUser(UserDTO userDTO);
 
-    String login(UserDTO userDTO);
+    UserDTO signIn(UserDTO userDTO);
 
-    UserDTO findByEmail(UserDTO userDTO);
+    UserDTO forgotPassword(UserDTO userDTO);
+
+    UserDTO getByUUID(String uuid);
 }

@@ -27,4 +27,6 @@ public class UserDTO extends BaseObject {
     private Long phoneNumber;
 
     private Set<String> roles;
+
+    private String accessToken;
 }

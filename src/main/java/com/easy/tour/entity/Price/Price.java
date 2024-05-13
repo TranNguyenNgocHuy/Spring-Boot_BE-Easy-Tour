@@ -3,6 +3,7 @@ package com.easy.tour.entity.Price;
 
 import com.easy.tour.Enum.ApprovalStatus;
 import com.easy.tour.entity.BaseEntity;
+import com.easy.tour.entity.Tour.Tour;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -26,9 +27,6 @@ public class Price extends BaseEntity {
     @Column(name = "Price_Id")
     private Long priceId;
 
-    @Column(name = "Tour_Code")
-    private String tourCode;
-
     @Column(name = "Approval_Status")
     @Enumerated(EnumType.STRING)
     private ApprovalStatus approvalStatus;
@@ -38,4 +36,8 @@ public class Price extends BaseEntity {
 
     @OneToOne(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private PriceApproval priceApproval;
+
+    @OneToOne
+    @JoinColumn(name = "Tour_Code", referencedColumnName = "Tour_Code")
+    private Tour tour;
 }

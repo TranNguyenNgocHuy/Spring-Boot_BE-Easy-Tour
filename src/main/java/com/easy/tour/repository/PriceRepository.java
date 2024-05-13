@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PriceRepository extends JpaRepository<Price, Long> {
-    boolean existsByTourCode(String tourCode);
-
-    Price findByTourCode(String tourCode);
+//    boolean existsByTourCode(String tourCode);
+//
+//    Price findByTourCode(String tourCode);
 }

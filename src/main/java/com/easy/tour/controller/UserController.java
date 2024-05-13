@@ -35,22 +35,63 @@ public class UserController {
         }
     }
 
+    @GetMapping (value = ApiPath.USER_GET_UUID)
+    public  ResponseEntity<?> getUserByUUID(@PathVariable("uuid") String uuid) {
+        UserResponseDTO response = new UserResponseDTO();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUuid(uuid);
+        try {
+            UserDTO result = service.getByUUID(uuid);
+            response.setData(result);
+            response.setMessage("Success get user by uuid");
+            response.setErrorCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response.setMessage("Error when get user by uuid");
+            response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping(value = ApiPath.USER_LOGIN)
     public ResponseEntity<UserResponseDTO> signIn(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
         try {
-            String token = service.login(userDTO);
-            if (token == null) {
+            UserDTO result = service.signIn(userDTO);
+            if (result == null) {
                 response.setMessage("UserName or password incorrect!!");
                 response.setErrorCode(403);
                 return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
             }
-            response.setAccessToken(token);
+            response.setData(result);
+            response.setAccessToken(result.getAccessToken());
             response.setMessage("Successful sign in");
             response.setErrorCode(200);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ex) {
             response.setMessage("Server error when sign In:" + ex);
+            response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = ApiPath.USER_FORGOT_PASSWORD)
+    public ResponseEntity<?> forgotPassword(@RequestBody UserDTO userDTO) {
+        UserResponseDTO response = new UserResponseDTO();
+        try {
+            UserDTO result = service.forgotPassword(userDTO);
+            if (result == null) {
+                response.setMessage("Email " + userDTO.getEmail() + " does not exist!");
+                response.setErrorCode(404);
+                return  new ResponseEntity<>( response, HttpStatus.NOT_FOUND);
+            }
+            response.setMessage("Send new password Successfully");
+            response.setErrorCode(200);
+            return  new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            response.setMessage("Server error when Send new password: " + ex);
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
