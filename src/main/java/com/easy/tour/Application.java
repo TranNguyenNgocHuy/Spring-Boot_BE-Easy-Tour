@@ -54,6 +54,7 @@ public class Application {
                 adminUser.setLastName("Admin");
                 adminUser.setFirstName("Admin");
                 adminUser.setEmail("admin@admin.com");
+                adminUser.setGender(false);
                 adminUser.setPassword(passwordEncoder.encode("123456"));
                 adminUser.getRoles().add(roleRepository.findByRoleName(RoleName.ADMIN));
                 userRepository.save(adminUser);

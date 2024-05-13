@@ -23,10 +23,10 @@ public class AutoSendEmailService {
         mailSender.send(message);
     }
 
-    public void sendEmail(String email,
-                          String fistName,
-                          String lastName,
-                          String password) {
+    public void welcomeUserEmail(String email,
+                                 String fistName,
+                                 String lastName,
+                                 String password) {
         String subject = "Welcome to EASY TOUR Company!";
         String body =
                 "Dear " + fistName + " " + lastName + ",\n\n" +
@@ -43,5 +43,21 @@ public class AutoSendEmailService {
         setupEmail(email, subject, body);
     }
 
+    public void forgotPasswordEmail(String email,
+                                    String fistName,
+                                    String lastName,
+                                    String password
+    ) {
+        String subject = "Provision of New Password!";
+        String body =
+                "Dear " + fistName + " " + lastName + ",\n\n" +
+                "We have received your request for a password reset\n\n" +
+                "Below is your new password for your account: " + password + "\n\n" +
+                "Best regards,\n" +
+                fistName + " " + lastName + " \n" +
+                "EASY TOUR Company";
+
+        setupEmail(email, subject, body);
+    }
 
 }

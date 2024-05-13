@@ -33,17 +33,21 @@ public class SecurityConfig {
         return  http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req -> req.requestMatchers("/api/v1/login", "/api/v1/user/register")
+                        req -> req.requestMatchers(
+                                        "/api/v1/login",
+                                        "/api/v1/user/register",
+                                        "/api/v1/forgot-password"
+                                       )
                                 .permitAll()
                                 .anyRequest()
                                 .permitAll()
-  //              .authenticated()
+                //.authenticated()
                 )
-//             .userDetailsService(userDetailsServiceImpl)
-//             .sessionManagement(session -> session
-//              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//              )
-              .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
+                //.userDetailsService(userDetailsServiceImpl)
+                //.sessionManagement(session -> session
+                //.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
     //    @Bean

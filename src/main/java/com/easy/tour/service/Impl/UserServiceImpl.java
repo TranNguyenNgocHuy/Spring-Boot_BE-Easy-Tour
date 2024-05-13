@@ -94,9 +94,8 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
                     user.getRoles().add(role);
                 }
             }
-            System.out.println(user.getPassword());
             // Send password by email
-            sendEmailService.sendEmail(userDTO.getEmail(), userDTO.getLastName(), userDTO.getFirstName(), randomPassword);
+            sendEmailService.welcomeUserEmail(userDTO.getEmail(), userDTO.getLastName(), userDTO.getFirstName(), randomPassword);
             return mapper.convertEntityToDTO(userRepository.saveAndFlush(user));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -143,7 +142,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
     }
 
 
-    public String login(UserDTO userDTO) {
+    public UserDTO signIn(UserDTO userDTO) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -152,17 +151,41 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
             );
             User user = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();
             String token = jwtService.generateToken(user);
-            return token;
+
+            UserDTO result = new UserDTO();
+            result.setUuid(user.getUuid());
+            result.setAccessToken(token);
+            return result;
         } catch (AuthenticationException ex) {
             return null;
         }
     }
 
     @Override
-    public UserDTO findByEmail(UserDTO userDTO) {
-        return null;
+    public UserDTO forgotPassword(UserDTO userDTO) {
+           if(userRepository.existsByEmail(userDTO.getEmail())) {
+               User user = userRepository.findByEmail(userDTO.getEmail()).get();
+               String newPassword = userUtils.generatePassword();
+
+               user.setPassword(passwordEncoder.encode(newPassword));
+               // Send password by email
+               sendEmailService.forgotPasswordEmail(user.getEmail(), user.getLastName(), user.getFirstName(), newPassword);
+               return mapper.convertEntityToDTO(userRepository.save(user));
+           }
+
+           log.trace("Email does not exist: {}", userDTO.getEmail());
+           return null;
     }
 
+    @Override
+    public UserDTO getByUUID(String uuid) {
+       UserDTO userDTO = new UserDTO();
+       User user = userRepository.findByUuid(uuid).get();
+
+       userDTO.setLastName(user.getLastName());
+       userDTO.setFirstName(user.getFirstName());
+       return userDTO;
+    }
 
 
 
@@ -176,9 +199,5 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
 //        return false;
 //    }
 
-//    @Override
-//    public UserDTO login(String name, String password) {
-//        User user = userRepository.findByUserNameAndPassword(name, password);
-//        return user == null ?  null : mapper.convertEntityToDTO(user);
-//    }
+
 }

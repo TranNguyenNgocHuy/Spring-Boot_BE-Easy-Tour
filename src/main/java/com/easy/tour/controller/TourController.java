@@ -1,10 +1,12 @@
 package com.easy.tour.controller;
 
 import com.easy.tour.consts.ApiPath;
+import com.easy.tour.dto.BaseObject;
 import com.easy.tour.dto.TourDTO;
 import com.easy.tour.entity.Tour.Tour;
 import com.easy.tour.mapper.TourMapper;
 import com.easy.tour.repository.TourRequestRepository;
+import com.easy.tour.response.ResponseDTO;
 import com.easy.tour.response.TourResponseDTO;
 import com.easy.tour.service.Impl.TourServiceImpl;
 import com.easy.tour.service.TourService;
@@ -130,6 +132,36 @@ public class TourController {
             log.trace(String.valueOf(e.getMessage()));
             response.setMessage("Error when deleted Tour, Please try again");
             response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = ApiPath.TOUR_NON_PRICE_GET_ALL)
+    public ResponseEntity<?> getAllTourNoPrice() {
+        ResponseDTO response = new TourResponseDTO();
+        try {
+            List<String> tourCodeList = tourService.tourCodeWithOutPrice();
+            response.setMessage("Successfully retrieved All tourCode without price");
+            response.setErrorCode(200);
+            response.setList(tourCodeList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.setMessage("Error when get all tourCode without price , Please try again");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = ApiPath.TOUR_GET_ALL_PRODUCT)
+    public ResponseEntity<?> showAllClientWeb() {
+        TourResponseDTO response = new TourResponseDTO();
+        try {
+            List<TourDTO> productList = tourService.getAllProduct();
+            response.setMessage("Successfully retrieved all tour product");
+            response.setErrorCode(200);
+            response.setList(productList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.setMessage("Error when get all tour Product , Please try again");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

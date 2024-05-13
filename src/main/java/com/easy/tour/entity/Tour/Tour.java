@@ -1,5 +1,6 @@
 package com.easy.tour.entity.Tour;
 
+import com.easy.tour.entity.Price.Price;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -51,4 +52,7 @@ public class Tour {
 
     @Column(name = "Img2")
     private String tourImg2;
+
+    @OneToOne(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Price price;
 }
