@@ -2,6 +2,9 @@ package com.easy.tour.controller;
 
 import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.TourDTO;
+import com.easy.tour.entity.Tour.Tour;
+import com.easy.tour.mapper.TourMapper;
+import com.easy.tour.repository.TourRequestRepository;
 import com.easy.tour.response.TourResponseDTO;
 import com.easy.tour.service.Impl.TourServiceImpl;
 import com.easy.tour.service.TourService;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -19,6 +23,11 @@ public class TourController {
 
     @Autowired
     TourServiceImpl tourService;
+    @Autowired
+    TourMapper tourMapper;
+
+    @Autowired
+    TourRequestRepository tourRequestRepository;
 
     @GetMapping(value = ApiPath.TOUR_GET_All)
     public ResponseEntity<?> getAllTourList() {
@@ -59,7 +68,7 @@ public class TourController {
     ResponseEntity<?> createTour(@RequestBody TourDTO tourDTO) {
         TourResponseDTO response = new TourResponseDTO();
         try {
-            TourDTO createdTour = tourService.create(tourDTO);
+            TourDTO createdTour = tourService.createTour(tourDTO);
             if(createdTour != null) {
                 response.setMessage("Success created Tour with tour code: " + tourDTO.getTourCode());
                 response.setErrorCode(200);
