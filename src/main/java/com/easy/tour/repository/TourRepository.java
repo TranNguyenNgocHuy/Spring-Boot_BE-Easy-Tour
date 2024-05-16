@@ -14,4 +14,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     @Query("SELECT t.tourCode FROM Tour t WHERE t.price IS NULL")
     List<String> findTourCodesWithoutPrice();
+
+    @Query("SELECT t.tourCode FROM Tour t")
+    List<String> findTourCodes();
 }

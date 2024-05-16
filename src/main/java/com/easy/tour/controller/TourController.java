@@ -2,12 +2,15 @@ package com.easy.tour.controller;
 
 import com.easy.tour.consts.ApiPath;
 import com.easy.tour.dto.BaseObject;
+import com.easy.tour.dto.DepartureDateDTO;
 import com.easy.tour.dto.TourDTO;
 import com.easy.tour.entity.Tour.Tour;
 import com.easy.tour.mapper.TourMapper;
 import com.easy.tour.repository.TourRequestRepository;
+import com.easy.tour.response.DepartureDateResponseDTO;
 import com.easy.tour.response.ResponseDTO;
 import com.easy.tour.response.TourResponseDTO;
+import com.easy.tour.service.DepartureDateService;
 import com.easy.tour.service.Impl.TourServiceImpl;
 import com.easy.tour.service.TourService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,10 @@ public class TourController {
 
     @Autowired
     TourRequestRepository tourRequestRepository;
+
+    @Autowired
+    DepartureDateService departureDateService;
+
 
     @GetMapping(value = ApiPath.TOUR_GET_All)
     public ResponseEntity<?> getAllTourList() {
@@ -55,23 +62,24 @@ public class TourController {
                 response.setMessage("Successfully to get Tour by tour code: " + tourCode);
                 response.setErrorCode(200);
                 response.setData(tourDto);
-                return  new ResponseEntity<>( response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.setMessage("Tour with tour code " + tourCode + " does not exist!");
                 response.setErrorCode(404);
-                return  new ResponseEntity<>( response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             response.setMessage("Error when get tour with by code: " + tourCode);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping(value = ApiPath.TOUR_CREATE)
     ResponseEntity<?> createTour(@RequestBody TourDTO tourDTO) {
         TourResponseDTO response = new TourResponseDTO();
         try {
             TourDTO createdTour = tourService.createTour(tourDTO);
-            if(createdTour != null) {
+            if (createdTour != null) {
                 response.setMessage("Success created Tour with tour code: " + tourDTO.getTourCode());
                 response.setErrorCode(200);
                 response.setData(createdTour);
@@ -95,10 +103,10 @@ public class TourController {
         TourResponseDTO response = new TourResponseDTO();
         try {
             boolean updateResult = tourService.updateTourByTourCode(updateTourDTO, tourCode);
-            if(updateResult) {
+            if (updateResult) {
                 response.setMessage("Update Tour Successfully");
                 response.setErrorCode(200);
-                return  new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.setMessage("Failed to update Tour");
                 response.setErrorCode(400); // Bad Request
@@ -117,9 +125,9 @@ public class TourController {
         TourResponseDTO response = new TourResponseDTO();
 
         log.info("delete tour: {}", tourCode);
-        try{
+        try {
             boolean deleteResult = tourService.deleteTourByTourCode(tourCode);
-            if(deleteResult) {
+            if (deleteResult) {
                 response.setMessage("Successfully deleted Tour with tour code: " + tourCode);
                 response.setErrorCode(200);
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -151,6 +159,21 @@ public class TourController {
         }
     }
 
+    @GetMapping(value = ApiPath.TOUR_ONLY_GET_ALL)
+    public ResponseEntity<?> getAllTourOnlyTourCode() {
+        ResponseDTO response = new TourResponseDTO();
+        try {
+            List<String> tourCodeList = tourService.findTourCodes();
+            response.setMessage("Successfully retrieved All tourCode");
+            response.setErrorCode(200);
+            response.setList(tourCodeList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.setMessage("Error when get all tourCode, Please try again");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(value = ApiPath.TOUR_GET_ALL_PRODUCT)
     public ResponseEntity<?> showAllClientWeb() {
         TourResponseDTO response = new TourResponseDTO();
@@ -165,4 +188,5 @@ public class TourController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

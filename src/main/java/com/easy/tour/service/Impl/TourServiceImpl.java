@@ -103,6 +103,10 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
         return tourCodeList;
     }
 
+    public List<String> findTourCodes() {
+        return tourRepository.findTourCodes();
+    }
+
     public List<TourDTO> getAllProduct() {
         List<Tour> productList = tourRepository.findAll();
         return productList.stream().map(product -> {
