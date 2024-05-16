@@ -50,4 +50,8 @@ public interface ApiPath {
     String TOUR_REQUEST_CREATE = API + "/tour-request/create";
     String TOUR_REQUEST_UPDATE = API + "/tour-request/update/{uuid}";
     String TOUR_REQUEST_DELETE = API + "/tour-request/delete/{uuid}";
+
+    //Departure Date
+    String DEPARTURE_DATE_CREATE = API + "/tour/create-date";
+    String TOUR_ONLY_GET_ALL = API +"/tour/get-all-tour-code";
 }
