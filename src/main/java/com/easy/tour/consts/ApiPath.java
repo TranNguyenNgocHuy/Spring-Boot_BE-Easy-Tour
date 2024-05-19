@@ -54,4 +54,5 @@ public interface ApiPath {
     //Departure Date
     String DEPARTURE_DATE_CREATE = API + "/tour/create-date";
     String TOUR_ONLY_GET_ALL = API +"/tour/get-all-tour-code";
+    String DEPARTURE_DATE_GET_ALL = API +"/tour/create-date-get-all";
 }
