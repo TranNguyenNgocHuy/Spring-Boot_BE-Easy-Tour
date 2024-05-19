@@ -1,9 +1,12 @@
 package com.easy.tour.entity.Tour;
 
 import com.easy.tour.entity.Price.Price;
+import com.easy.tour.entity.departure.DepartureDate;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -55,4 +58,7 @@ public class Tour {
 
     @OneToOne(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private Price price;
+
+    @OneToMany(mappedBy = "tour")
+    private List<DepartureDate> departureDateList;
 }

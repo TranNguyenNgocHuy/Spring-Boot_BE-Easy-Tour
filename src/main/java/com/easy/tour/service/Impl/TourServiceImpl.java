@@ -1,13 +1,8 @@
 package com.easy.tour.service.Impl;
 
-import com.easy.tour.dto.BaseObject;
-import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.dto.TourDTO;
-import com.easy.tour.dto.TourRequestDTO;
-import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.Tour.Tour;
 import com.easy.tour.entity.Tour.TourRequest;
-import com.easy.tour.mapper.AbstractMapper;
 import com.easy.tour.mapper.TourMapper;
 import com.easy.tour.mapper.TourRequestMapper;
 import com.easy.tour.repository.TourRepository;
@@ -17,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -107,13 +101,14 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
         return tourRepository.findTourCodes();
     }
 
+    @Override
     public List<TourDTO> getAllProduct() {
         List<Tour> productList = tourRepository.findAll();
         return productList.stream().map(product -> {
             TourDTO tourDTO = tourMapper.convertEntityToDTO(product);
             tourDTO.setAdult(product.getPrice().getPriceDetail().getAdult());
             tourDTO.setChildren(product.getPrice().getPriceDetail().getChildren());
-            return  tourDTO;
+            return tourDTO;
         }).collect(Collectors.toList());
     }
 }
