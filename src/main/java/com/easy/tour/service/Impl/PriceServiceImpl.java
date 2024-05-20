@@ -1,5 +1,7 @@
 package com.easy.tour.service.Impl;
 
+import com.easy.tour.Enum.ApprovalStatus;
+import com.easy.tour.Enum.PriceStatus;
 import com.easy.tour.dto.PriceDTO;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.Price.PriceDetail;
@@ -50,6 +52,8 @@ public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
         try {
            // Get Tour by Tour Code
            Tour tour = tourRepository.findByTourCode(priceDTO.getTourCode());
+           tour.setPriceStatus(PriceStatus.COMPLETED);
+           tour.setApprovalStatus(ApprovalStatus.PENDING_MANAGER);
            //Mapper price
            Price price = priceMapper.convertDTOToEntity(priceDTO);
            //Mapper priceDetail
@@ -67,24 +71,25 @@ public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
             return null;
         }
     }
-//
-//    @Override
-//    public boolean updatePriceByTourCode(PriceDTO priceDTO, String tourCode) {
-//        try {
-//            Price price = repository.findByTourCode(tourCode);
-//
-//            // Get priceDetail into Price
-//            PriceDetail priceDetail = price.getPriceDetail();
-//
-//            priceDetailMapper.mapDTOToEntity(priceDTO, priceDetail);
-//            repository.save(price);
-//            return true;
-//        } catch (Exception e) {
-//            log.error("Error when update price: " + e);
-//            return false;
-//        }
-//    }
-//
+
+    @Override
+    public boolean updatePriceByTourCode(PriceDTO priceDTO, String tourCode) {
+        try {
+            Tour tour = tourRepository.findByTourCode(tourCode);
+            Price price = tour.getPrice();
+
+            // Get priceDetail into Price
+            PriceDetail priceDetail = price.getPriceDetail();
+
+            priceDetailMapper.mapDTOToEntity(priceDTO, priceDetail);
+            priceRepository.save(price);
+            return true;
+        } catch (Exception e) {
+            log.error("Error when update price: " + e);
+            return false;
+        }
+    }
+
     @Override
     public List<PriceDTO> findAll() {
         List<Price> priceList = priceRepository.findAll();
@@ -111,20 +116,22 @@ public class PriceServiceImpl extends AbstractBaseServiceImpl<PriceDTO>
 //        return false;
 //    }
 //
-//    @Override
-//    public PriceDTO findByTourCode(String tourCode) {
-//        Price price = repository.findByTourCode(tourCode);
-//
-//        if (price != null) {
-//            // Get Price Detail
-//            PriceDetail priceDetail = price.getPriceDetail();
-//            // Mapping Price
-//            PriceDTO priceDto = priceMapper.convertEntityToDTO(price);
-//            // Mapping priceDetail
-//            priceDetailMapper.mapEntityToDTO(priceDetail, priceDto);
-//            log.info("price: {}" + priceDto);
-//            return priceDto;
-//        }
-//        return null;
-//    }
+    @Override
+    public PriceDTO findByTourCode(String tourCode) {
+        Tour tour = tourRepository.findByTourCode(tourCode);
+        Price price = tour.getPrice();
+
+        if (price != null) {
+            // Get Price Detail
+            PriceDetail priceDetail = price.getPriceDetail();
+            // Mapping Price
+            PriceDTO priceDto = priceMapper.convertEntityToDTO(price);
+            // Mapping priceDetail
+            priceDetailMapper.mapEntityToDTO(priceDetail, priceDto);
+            // Get tour code
+            priceDto.setTourCode(tourCode);
+            return priceDto;
+        }
+        return null;
+    }
 }

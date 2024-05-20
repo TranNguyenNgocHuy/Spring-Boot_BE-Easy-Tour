@@ -47,13 +47,13 @@ public class Application {
                 roleRepository.save(new Role(RoleName.USER));
             }
 
-            if (!userRepository.existsByEmail("admin@admin.com")) {
+            if (!userRepository.existsByEmail("tran.huy211014@gmail.com")) {
                 User adminUser = new User();
                 adminUser.setUserId(1L);
                 adminUser.setUuid(UUID.randomUUID().toString());
                 adminUser.setLastName("Admin");
                 adminUser.setFirstName("Admin");
-                adminUser.setEmail("admin@admin.com");
+                adminUser.setEmail("tran.huy211014@gmail.com");
                 adminUser.setGender(false);
                 adminUser.setPassword(passwordEncoder.encode("123456"));
                 adminUser.getRoles().add(roleRepository.findByRoleName(RoleName.ADMIN));

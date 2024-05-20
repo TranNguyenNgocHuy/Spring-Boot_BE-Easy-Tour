@@ -5,11 +5,14 @@ import com.easy.tour.dto.UserDTO;
 import com.easy.tour.response.UserResponseDTO;
 import com.easy.tour.service.Impl.UserServiceImpl;
 import com.easy.tour.service.UserService;
+import com.google.protobuf.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -97,6 +100,53 @@ public class UserController {
         }
     }
 
+    @PutMapping(value = ApiPath.USER_UPDATE_INFO)
+    public ResponseEntity<?> userUpdateInfo(@RequestBody UserDTO userDTO) {
+        UserResponseDTO response = new UserResponseDTO();
+        try {
+            boolean updateResult = service.updateInfo(userDTO);
+            if(updateResult) {
+                response.setMessage("Update User Information Successfully");
+                response.setErrorCode(200);
+                return  new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.setMessage("Failed to User Information");
+                response.setErrorCode(400); // Bad Request
+                return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response.setMessage("Error when update User Information");
+            response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = ApiPath.USER_CHANGE_PASSWORD)
+    public ResponseEntity<?> userChangePassword(@RequestBody UserDTO userDTO) {
+        UserResponseDTO response = new UserResponseDTO();
+        try{
+            boolean changePasswordResult = service.changePassword(userDTO);
+            if(!changePasswordResult) {
+                response.setMessage("Password does not correct!");
+                response.setErrorCode(422);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            response.setMessage("Change Password Successfully");
+            response.setErrorCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            response.setMessage("Error when change password");
+            response.setErrorCode(500);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+       
+    
+        
+
+
     @PostMapping(value = ApiPath.USER_CREATE)
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
@@ -104,10 +154,10 @@ public class UserController {
             UserDTO result = service.createUser(userDTO);
             if (result == null) {
                 response.setMessage("Email already exist !");
-                response.setErrorCode(401);
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                response.setErrorCode(422);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
-            response.setMessage("Register Successful ");
+            response.setMessage("Register Successful");
             response.setErrorCode(200);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ex) {

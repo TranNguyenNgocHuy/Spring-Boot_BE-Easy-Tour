@@ -1,5 +1,7 @@
 package com.easy.tour.dto;
 
+import com.easy.tour.Enum.ApprovalStatus;
+import com.easy.tour.Enum.PriceStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,4 +22,6 @@ public class TourDTO extends BaseObject{
     private String tourImg2;
     private BigDecimal adult;
     private BigDecimal children;
+    private ApprovalStatus approvalStatus;
+    private PriceStatus priceStatus;
 }

@@ -14,4 +14,8 @@ public interface UserService  {
     UserDTO forgotPassword(UserDTO userDTO);
 
     UserDTO getByUUID(String uuid);
+
+    boolean updateInfo(UserDTO userDTO);
+
+    boolean changePassword(UserDTO userDTO);
 }

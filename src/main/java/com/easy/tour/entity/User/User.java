@@ -51,6 +51,9 @@ public class User extends BaseEntity
     @Column(name = "Password", nullable = false)
     private String password;
 
+    @Column(name = "Avatar_Img")
+    private String avatarImg;
+
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

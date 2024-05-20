@@ -40,13 +40,13 @@ public class SecurityConfig {
                                        )
                                 .permitAll()
                                 .anyRequest()
-                                .permitAll()
-                //.authenticated()
+                                //.permitAll()
+                .authenticated()
                 )
-                //.userDetailsService(userDetailsServiceImpl)
-                //.sessionManagement(session -> session
-                //.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //)
+                .userDetailsService(userDetailsServiceImpl)
+                .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 

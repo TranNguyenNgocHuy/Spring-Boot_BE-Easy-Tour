@@ -1,5 +1,7 @@
 package com.easy.tour.entity.Tour;
 
+import com.easy.tour.Enum.ApprovalStatus;
+import com.easy.tour.Enum.PriceStatus;
 import com.easy.tour.entity.Price.Price;
 import com.easy.tour.entity.departure.DepartureDate;
 import jakarta.persistence.*;
@@ -42,9 +44,13 @@ public class Tour {
 // @Column(name = "Approval_Date")
 // private Date approvalDate;
 
-// @Column(name = "Approval_Status")
-// @Enumerated(EnumType.STRING)
-// private ApprovalStatus approvalStatus;
+    @Column(name = "Approval_Status")
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus approvalStatus;
+
+    @Column(name = "Price_Status")
+    @Enumerated(EnumType.STRING)
+    private PriceStatus priceStatus;
 
     @ManyToOne
     @JoinColumn(name = "Tour_Request_Id")
@@ -58,6 +64,9 @@ public class Tour {
 
     @OneToOne(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private Price price;
+
+    @OneToOne(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TourApproval tourApproval;
 
     @OneToMany(mappedBy = "tour")
     private List<DepartureDate> departureDateList;

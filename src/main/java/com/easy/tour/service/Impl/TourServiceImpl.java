@@ -1,5 +1,7 @@
 package com.easy.tour.service.Impl;
 
+import com.easy.tour.Enum.ApprovalStatus;
+import com.easy.tour.Enum.PriceStatus;
 import com.easy.tour.dto.TourDTO;
 import com.easy.tour.entity.Tour.Tour;
 import com.easy.tour.entity.Tour.TourRequest;
@@ -82,9 +84,10 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
     public TourDTO createTour(TourDTO tourDTO) {
 
         Tour tour = tourMapper.convertDTOToEntity(tourDTO);
+        tour.setApprovalStatus(ApprovalStatus.PENDING_PRICE);
+        tour.setPriceStatus(PriceStatus.PENDING_PRICE);
 
         TourRequest tourRequest = tourRequestRepository.findByUuid(UUID.fromString(tourDTO.getTourRequestCode().trim()));
-
 
         tour.setTourRequest(tourRequest);
         System.out.println(tour);

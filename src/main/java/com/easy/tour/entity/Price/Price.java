@@ -27,15 +27,10 @@ public class Price extends BaseEntity {
     @Column(name = "Price_Id")
     private Long priceId;
 
-    @Column(name = "Approval_Status")
-    @Enumerated(EnumType.STRING)
-    private ApprovalStatus approvalStatus;
 
     @OneToOne(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private PriceDetail priceDetail;
 
-    @OneToOne(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private PriceApproval priceApproval;
 
     @OneToOne
     @JoinColumn(name = "Tour_Code", referencedColumnName = "Tour_Code")

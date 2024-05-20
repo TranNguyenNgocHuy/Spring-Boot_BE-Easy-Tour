@@ -184,10 +184,52 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<UserDTO>
 
        userDTO.setLastName(user.getLastName());
        userDTO.setFirstName(user.getFirstName());
+       userDTO.setUuid(user.getUuid());
+       userDTO.setEmail(user.getEmail());
+       userDTO.setPhoneNumber(user.getPhoneNumber());
+       userDTO.setGender(user.getGender());
+       userDTO.setAvatarImg(user.getAvatarImg());
+
        return userDTO;
     }
 
+    @Override
+    public boolean updateInfo(UserDTO userDTO) {
+        try {
+            User user = userRepository.findByUuid(userDTO.getUuid()).get();
 
+            user.setFirstName(userDTO.getFirstName());
+            user.setLastName(userDTO.getLastName());
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+            user.setGender(userDTO.getGender());
+            user.setAvatarImg(userDTO.getAvatarImg());
+            userRepository.saveAndFlush(user);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean changePassword(UserDTO userDTO) {
+        try {
+            User user = userRepository.findByUuid(userDTO.getUuid()).get();
+            if(passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+                if(userDTO.getNewPassword().equals(userDTO.getConfirmNewPassword())) {
+                    user.setPassword(passwordEncoder.encode(userDTO.getNewPassword()));
+                    userRepository.saveAndFlush(user);
+                    return true;
+                }
+            }
+            return false;
+        }  catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+//
 
 //    @Override
 //    public boolean delete(String uuid) {
