@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,4 +26,7 @@ public class TourDTO extends BaseObject{
     private BigDecimal children;
     private ApprovalStatus approvalStatus;
     private PriceStatus priceStatus;
+
+    //Dương
+    private List<LocalDate> localDateList;
 }

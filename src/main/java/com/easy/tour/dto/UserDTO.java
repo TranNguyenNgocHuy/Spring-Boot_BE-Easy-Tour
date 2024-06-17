@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -29,9 +30,9 @@ public class UserDTO extends BaseObject {
 
     private Boolean gender;
 
-    private Long phoneNumber;
+    private String phoneNumber;
 
-    private Set<String> roles;
+    private String userRole;
 
     private String accessToken;
 

@@ -5,11 +5,7 @@ import com.easy.tour.dto.UserDTO;
 import java.util.List;
 
 public interface UserService  {
-    UserDTO register(UserDTO userDTO);
-
     UserDTO createUser(UserDTO userDTO);
-
-    UserDTO signIn(UserDTO userDTO);
 
     UserDTO forgotPassword(UserDTO userDTO);
 
@@ -18,4 +14,7 @@ public interface UserService  {
     boolean updateInfo(UserDTO userDTO);
 
     boolean changePassword(UserDTO userDTO);
+
+    boolean delete(String uuid);
+
 }

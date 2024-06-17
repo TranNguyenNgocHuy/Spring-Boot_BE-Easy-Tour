@@ -2,20 +2,21 @@ package com.easy.tour.securtiy.jwt;
 
 
 import com.easy.tour.entity.User.User;
+import com.easy.tour.service.Impl.AuthServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -27,16 +28,6 @@ public class JwtService {
 
     private final String SECRET_KEY = "ae74d2bb9224e6a3ecd56b26b76d05a20361d21289e9a5b0553c0c7cc2e0272c";
     private final Long JWT_EXPIRATION = 86400000L; // 24h * 60m * 60s * 1000
-
-    // Method extract Token form Http Servlet
-    public String getToken (HttpServletRequest request) {
-
-        final String bearerToken = request.getHeader("Authorization");
-
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-        {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "
-        return null;
-    }
 
     // Extract all Claims from token
     private Claims extractAllClaims(String token) {
@@ -56,6 +47,7 @@ public class JwtService {
 
     // Extract User Name from token
     public String extractUserName(String token) {
+
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -85,14 +77,14 @@ public class JwtService {
     }
 
    // Create Token
-    public String generateToken(User user) {
+    public String generateToken(Authentication authentication, GrantedAuthority authority) {
         String token = Jwts
                 // Bắt đầu xây chuỗi Jwt
                 .builder()
                 // get User name
-                .setSubject(user.getEmail())
+                .setSubject(authentication.getName())
                 // create a claim with(String, List<String> roles)
-                .claim("role", user.getRoles())
+                .claim("role", authority)
                 // set create time
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 // set Expiration time

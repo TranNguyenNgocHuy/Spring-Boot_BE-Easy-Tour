@@ -5,6 +5,7 @@ import com.easy.tour.Enum.PriceStatus;
 import com.easy.tour.dto.TourDTO;
 import com.easy.tour.entity.Tour.Tour;
 import com.easy.tour.entity.Tour.TourRequest;
+import com.easy.tour.entity.departure.DepartureDate;
 import com.easy.tour.mapper.TourMapper;
 import com.easy.tour.mapper.TourRequestMapper;
 import com.easy.tour.repository.TourRepository;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,10 +51,17 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
     @Override
     public TourDTO findByTourCode(String tourCode) {
         Tour tour = tourRepository.findByTourCode(tourCode);
+        List<LocalDate> localDateList = new ArrayList<>();
 
         if (tour != null) {
-
             TourDTO tourDto = tourMapper.convertEntityToDTO(tour);
+            // Dương
+            for(DepartureDate departureDate: tour.getDepartureDateList()) {
+                LocalDate localDate = departureDate.getDepartureDate();
+                localDateList.add(localDate);
+            }
+            tourDto.setLocalDateList(localDateList);
+
             log.info("tour: {}" + tourDto);
             return tourDto;
         }
@@ -114,4 +124,29 @@ public class TourServiceImpl extends AbstractBaseServiceImpl<TourDTO>
             return tourDTO;
         }).collect(Collectors.toList());
     }
+
+//    Duong
+    public List<TourDTO> customGetAll() {
+        List<Tour> tourList = tourRepository.findAll();
+        List<TourDTO> tourDtoList = new ArrayList<>();
+
+        for (Tour tour: tourList) {
+            TourDTO tourDTO = tourMapper.convertEntityToDTO(tour);
+            List<LocalDate> localDateList = new ArrayList<>();
+
+            // extract DepartureDate from Tour
+            for (DepartureDate departureDate : tour.getDepartureDateList()) {
+                LocalDate localDate = departureDate.getDepartureDate();
+                localDateList.add(localDate);
+            }
+
+            // Set the list of LocalDate in TourDto
+            tourDTO.setLocalDateList(localDateList);
+
+            // Add TourDto to tourDtoList
+            tourDtoList.add(tourDTO);
+        }
+
+        return tourDtoList;
+    };
 }

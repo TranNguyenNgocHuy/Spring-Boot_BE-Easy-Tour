@@ -189,4 +189,18 @@ public class TourController {
         }
     }
 
+    @GetMapping(value = ApiPath.TOUR_GET_All_FOR_BOOKING)
+    public ResponseEntity<?> getAllTourForBooking() {
+        TourResponseDTO response = new TourResponseDTO();
+        try {
+            List<TourDTO> tourDTOList = tourService.customGetAll();
+            response.setMessage("Successfully retrieved All Tour");
+            response.setErrorCode(200);
+            response.setList(tourDTOList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.setMessage("Error when get all Tour list , Please try again");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

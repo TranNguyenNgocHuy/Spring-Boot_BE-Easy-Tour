@@ -57,28 +57,6 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = ApiPath.USER_LOGIN)
-    public ResponseEntity<UserResponseDTO> signIn(@RequestBody UserDTO userDTO) {
-        UserResponseDTO response = new UserResponseDTO();
-        try {
-            UserDTO result = service.signIn(userDTO);
-            if (result == null) {
-                response.setMessage("UserName or password incorrect!!");
-                response.setErrorCode(403);
-                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-            }
-            response.setData(result);
-            response.setAccessToken(result.getAccessToken());
-            response.setMessage("Successful sign in");
-            response.setErrorCode(200);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception ex) {
-            response.setMessage("Server error when sign In:" + ex);
-            response.setErrorCode(500);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PutMapping(value = ApiPath.USER_FORGOT_PASSWORD)
     public ResponseEntity<?> forgotPassword(@RequestBody UserDTO userDTO) {
         UserResponseDTO response = new UserResponseDTO();
@@ -142,9 +120,6 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-       
-    
-        
 
 
     @PostMapping(value = ApiPath.USER_CREATE)
@@ -167,24 +142,26 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = ApiPath.USER_REGISTER)
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserDTO userDTO) {
+
+    @DeleteMapping(value = ApiPath.USER_DELETE)
+    ResponseEntity<?> deleteUser(@PathVariable("uuid") String uuid) {
         UserResponseDTO response = new UserResponseDTO();
-        try {
-            UserDTO result = service.register(userDTO);
-            if (result == null) {
-                response.setMessage("Email already exist !");
-                response.setErrorCode(401);
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        try{
+            boolean deleteResult = service.delete(uuid);
+            if(deleteResult) {
+                response.setMessage("Successfully deleted User!");
+                response.setErrorCode(200);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.setMessage("Failed to deleted User!");
+                response.setErrorCode(400);
+                return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
             }
-            response.setMessage("Register Successful ");
-            response.setErrorCode(200);
-            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            response.setMessage("Server error register:" + e);
+            response.setMessage("Error when deleted User!");
             response.setErrorCode(500);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    // end
+
 }

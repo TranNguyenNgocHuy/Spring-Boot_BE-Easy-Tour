@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -68,6 +69,17 @@ public class Tour {
     @OneToOne(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private TourApproval tourApproval;
 
-    @OneToMany(mappedBy = "tour")
-    private List<DepartureDate> departureDateList;
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DepartureDate> departureDateList = new ArrayList<>();
+
+//  Dương
+    public void addDepartureDate(DepartureDate date) {
+        departureDateList.add(date);
+        date.setTour(this);
+    }
+
+    public void removeDepartureDate(DepartureDate date) {
+        departureDateList.remove(date);
+        date.setTour(this);
+    }
 }
